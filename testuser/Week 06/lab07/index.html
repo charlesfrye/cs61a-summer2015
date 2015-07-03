@@ -1,0 +1,617 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="description" content ="CS61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Soumya Basu, Kevin Chen, Rohan Chitnis, Timothy Greeno, Jessica Gu, Brian Hou, Robert Huang, Andrew Huang, Joy Jeng, Austin Le, Youri Park, Harold Pimentel, Sumukh Sridhara, Steven Tang, Michelle Tian, Alana Tran, Dickson Tsai, Max Wolffe, Albert Wu, Marvin Zhang" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" type="text/css" href="../../assets/css/resource.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/lab.css" />
+<link rel="stylesheet" type="text/css" href="../../assets/coding-js/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="../../assets/coding-js/coding.css" />
+
+    <title>Lab 7: Recursive Objects | CS 61A Spring 2015</title>
+
+  </head>
+  <body style="font-family: Georgia,serif;">
+    <h1 id="title-main">Lab 7: Recursive Objects</h1>
+
+    <p><i>Due at 11:59pm on 03/12/2015.</i></p>
+
+<h2>Starter Files</h2>
+
+<p>Download <a href="lab07.zip">lab07.zip</a>.
+Inside the archive, you will find starter files for the questions in this lab,
+  along with a copy of the <a href="ok">OK</a> autograder.</p>
+
+<h2>Submission</h2>
+
+<p>By the end of this lab, you should have submitted the lab with
+<code>python3 ok --submit</code>. You may submit more than once before the
+deadline; only the final submission will be graded.</p>
+
+
+<ul>
+  <li>To receive credit for this lab, you must complete Questions 2 and 4 in
+  <a href="lab07.py">lab07.py</a> and submit through OK.</li>
+  <li>Questions 5 through 13 are <em>extra practice</em>. They can be found in the
+  <a href="lab07_extra.py">lab07_extra.py</a> file. It is recommended that you complete
+  these problems on your own time.</li>
+</ul>
+
+
+    <h2 id='table-of-contents'>Table of Contents</h2>
+    <ul>
+  <li><a href="index.html#linked-lists">Linked Lists</a></li>
+  <ul>
+  <li><a href="index.html#q1">Question 1</a></li>
+  <li><a href="index.html#q2">Question 2</a></li>
+</ul>
+
+  <li><a href="index.html#trees">Trees</a></li>
+  <ul>
+  <li><a href="index.html#q3">Question 3</a></li>
+  <li><a href="index.html#q4">Question 4</a></li>
+</ul>
+
+  <li><a href="index.html#extra-questions">Extra Questions</a></li>
+  <ul>
+  <li><a href="index.html#q5">Question 5</a></li>
+  <li><a href="index.html#q6">Question 6</a></li>
+  <li><a href="index.html#q7">Question 7</a></li>
+  <li><a href="index.html#q8">Question 8</a></li>
+  <li><a href="index.html#q9">Question 9</a></li>
+  <li><a href="index.html#q10">Question 10</a></li>
+</ul>
+
+  <li><a href="index.html#folding-linked-lists">Folding Linked Lists</a></li>
+  <ul>
+  <li><a href="index.html#q11">Question 11</a></li>
+  <li><a href="index.html#q12">Question 12</a></li>
+  <li><a href="index.html#q13">Question 13: Extra for Experts</a></li>
+</ul>
+
+</ul>
+
+
+    
+
+
+<h2 id="linked-lists">Linked Lists</h2>
+
+
+<p>A linked list is either an empty linked list (<code>Link.empty</code>) <strong>or</strong> a first value
+and the rest of the linked list.</p>
+
+<pre><code>class Link:
+    &quot;&quot;&quot;A linked list.
+
+    &gt;&gt;&gt; s = Link(1, Link(2, Link(3, Link(4))))
+    &gt;&gt;&gt; len(s)
+    4
+    &gt;&gt;&gt; s[2]
+    3
+    &gt;&gt;&gt; s
+    Link(1, Link(2, Link(3, Link(4))))
+    &quot;&quot;&quot;
+    empty = ()
+
+    def __init__(self, first, rest=empty):
+        assert rest is Link.empty or isinstance(rest, Link)
+        self.first = first
+        self.rest = rest
+
+    def __getitem__(self, i):
+        if i == 0:
+            return self.first
+        else:
+            return self.rest[i&#x2d;1]
+
+    def __len__(self):
+        return 1 + len(self.rest)
+
+    def __repr__(self):
+        if self.rest is not Link.empty:
+            rest_str = &#x27;, &#x27; + repr(self.rest)
+        else:
+            rest_str = &#x27;&#x27;
+        return &#x27;Link({0}{1})&#x27;.format(repr(self.first), rest_str)</code></pre>
+
+<p>To check if a <code>Link</code> is empty, compare it against the class attribute
+<code>Link.empty</code>:</p>
+
+<pre><code>if link is Link.empty:
+    print(&#x27;This linked list is empty!&#x27;)</code></pre>
+
+<h3 class="question" id="q1">Question 1</h3>
+
+<p>Predict what Python will display when the following lines are typed
+into the interpreter:</p>
+
+
+    <pre><code>&gt;&gt;&gt; Link()
+<div class="alt 12">______</div><div class="solution 12">&#x54;&#x79;&#x70;&#x65;&#x45;&#x72;&#x72;&#x6f;&#x72;</div>
+&gt;&gt;&gt; link = Link(1, Link(2, Link(3)))
+&gt;&gt;&gt; link.first
+<div class="alt 12">______</div><div class="solution 12">&#x31;</div>
+&gt;&gt;&gt; link.rest.first
+<div class="alt 12">______</div><div class="solution 12">&#x32;</div>
+&gt;&gt;&gt; link.rest.rest.rest is Link.empty
+<div class="alt 12">______</div><div class="solution 12">&#x54;&#x72;&#x75;&#x65;</div>
+&gt;&gt;&gt; link.first = 9001
+&gt;&gt;&gt; link.first
+<div class="alt 12">______</div><div class="solution 12">&#x39;&#x30;&#x30;&#x31;</div>
+&gt;&gt;&gt; link.rest = link.rest.rest
+&gt;&gt;&gt; link.rest.first
+<div class="alt 12">______</div><div class="solution 12">&#x33;</div>
+&gt;&gt;&gt; link = Link(1)
+&gt;&gt;&gt; link.rest = link
+&gt;&gt;&gt; link.rest.rest.rest.rest.first
+<div class="alt 12">______</div><div class="solution 12">&#x31;</div></code></pre>
+
+    <button id='12' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<h3 class="question" id="q2">Question 2</h3>
+
+<p>Implement a function <code>insert</code> that takes a <code>Link</code>, a value, and an index, and
+inserts the value into the <code>Link</code> at the given index. You can assume the linked
+list already has at least one element. Do not return anything &mdash; <code>insert</code> should
+mutate the linked list.</p>
+
+
+    <button id='0' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def insert(link, value, index):
+    &quot;&quot;&quot;Insert a value into a Link at the given index.
+
+    &gt;&gt;&gt; link = Link(1, Link(2, Link(3)))
+    &gt;&gt;&gt; insert(link, 9001, 0)
+    &gt;&gt;&gt; link
+    Link(9001, Link(1, Link(2, Link(3))))
+    &gt;&gt;&gt; insert(link, 100, 2)
+    &gt;&gt;&gt; link
+    Link(9001, Link(1, Link(100, Link(2, Link(3)))))
+    &gt;&gt;&gt; insert(link, 4, 5)
+    Index out of bounds!
+    &quot;&quot;&quot;
+<div class="alt 0">    "*** YOUR CODE HERE ***"
+</div><div class="solution 0">&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x69;&#x6e;&#x64;&#x65;&#x78;&#x20;&#x3d;&#x3d;&#x20;&#x30;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x20;&#x3d;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x2c;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x20;&#x3d;&#x20;&#x76;&#x61;&#x6c;&#x75;&#x65;&#xa;&#x20;&#x20;&#x20;&#x20;&#x65;&#x6c;&#x69;&#x66;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x20;&#x69;&#x73;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x70;&#x72;&#x69;&#x6e;&#x74;&#x28;&#x27;&#x49;&#x6e;&#x64;&#x65;&#x78;&#x20;&#x6f;&#x75;&#x74;&#x20;&#x6f;&#x66;&#x20;&#x62;&#x6f;&#x75;&#x6e;&#x64;&#x73;&#x21;&#x27;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x65;&#x6c;&#x73;&#x65;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x69;&#x6e;&#x73;&#x65;&#x72;&#x74;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x2c;&#x20;&#x76;&#x61;&#x6c;&#x75;&#x65;&#x2c;&#x20;&#x69;&#x6e;&#x64;&#x65;&#x78;&#x20;&#x2d;&#x20;&#x31;&#x29;&#xa;&#xa;&#x23;&#x20;&#x69;&#x74;&#x65;&#x72;&#x61;&#x74;&#x69;&#x76;&#x65;&#x20;&#x73;&#x6f;&#x6c;&#x75;&#x74;&#x69;&#x6f;&#x6e;&#xa;&#x64;&#x65;&#x66;&#x20;&#x69;&#x6e;&#x73;&#x65;&#x72;&#x74;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2c;&#x20;&#x76;&#x61;&#x6c;&#x75;&#x65;&#x2c;&#x20;&#x69;&#x6e;&#x64;&#x65;&#x78;&#x29;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x77;&#x68;&#x69;&#x6c;&#x65;&#x20;&#x69;&#x6e;&#x64;&#x65;&#x78;&#x20;&#x3e;&#x20;&#x30;&#x20;&#x61;&#x6e;&#x64;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x20;&#x69;&#x73;&#x20;&#x6e;&#x6f;&#x74;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x20;&#x3d;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x69;&#x6e;&#x64;&#x65;&#x78;&#x20;&#x2d;&#x3d;&#x20;&#x31;&#xa;&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x69;&#x6e;&#x64;&#x65;&#x78;&#x20;&#x3d;&#x3d;&#x20;&#x30;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x20;&#x3d;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x2c;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x20;&#x3d;&#x20;&#x76;&#x61;&#x6c;&#x75;&#x65;&#xa;&#x20;&#x20;&#x20;&#x20;&#x65;&#x6c;&#x73;&#x65;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x70;&#x72;&#x69;&#x6e;&#x74;&#x28;&#x27;&#x49;&#x6e;&#x64;&#x65;&#x78;&#x20;&#x6f;&#x75;&#x74;&#x20;&#x6f;&#x66;&#x20;&#x62;&#x6f;&#x75;&#x6e;&#x64;&#x73;&#x21;&#x27;&#x29;</div></code></pre>
+
+
+
+
+<h2 id="trees">Trees</h2>
+
+
+<p>As we saw in lecture, we can also represent trees as objects.</p>
+
+<pre><code>class Tree:
+    def __init__(self, entry, branches=()):
+        self.entry = entry
+        for branch in branches:
+            assert isinstance(branch, Tree)
+        self.branches = branches
+
+    def __repr__(self):
+        if self.branches:
+            branches_str = &#x27;, &#x27; + repr(self.branches)
+        else:
+            branches_str = &#x27;&#x27;
+        return &#x27;Tree({0}{1})&#x27;.format(self.entry, branches_str)
+
+    def is_leaf(self):
+        return not self.branches</code></pre>
+
+<h3 class="question" id="q3">Question 3</h3>
+
+<p>Predict what Python will display when the following lines are typed
+into the interpreter:</p>
+
+
+    <pre><code>&gt;&gt;&gt; t = Tree(1, Tree(2))
+<div class="alt 13">______</div><div class="solution 13">&#x54;&#x79;&#x70;&#x65;&#x45;&#x72;&#x72;&#x6f;&#x72;</div>
+&gt;&gt;&gt; t = Tree(1, [Tree(2)])
+&gt;&gt;&gt; t.entry
+<div class="alt 13">______</div><div class="solution 13">&#x31;</div>
+&gt;&gt;&gt; t.branches[0]
+<div class="alt 13">______</div><div class="solution 13">&#x54;&#x72;&#x65;&#x65;&#x28;&#x32;&#x29;</div>
+&gt;&gt;&gt; t.branches[0].entry
+<div class="alt 13">______</div><div class="solution 13">&#x32;</div>
+&gt;&gt;&gt; t.entry = t.branches[0].entry
+&gt;&gt;&gt; t
+<div class="alt 13">______</div><div class="solution 13">&#x54;&#x72;&#x65;&#x65;&#x28;&#x32;&#x2c;&#x20;&#x5b;&#x54;&#x72;&#x65;&#x65;&#x28;&#x32;&#x29;&#x5d;&#x29;</div>
+&gt;&gt;&gt; t.branches.append(Tree(4, [Tree(8)]))
+&gt;&gt;&gt; len(t.branches)
+<div class="alt 13">______</div><div class="solution 13">&#x32;</div>
+&gt;&gt;&gt; t.branches[0]
+<div class="alt 13">______</div><div class="solution 13">&#x54;&#x72;&#x65;&#x65;&#x28;&#x32;&#x29;</div>
+&gt;&gt;&gt; t.branches[1]
+<div class="alt 13">______</div><div class="solution 13">&#x54;&#x72;&#x65;&#x65;&#x28;&#x34;&#x2c;&#x20;&#x5b;&#x54;&#x72;&#x65;&#x65;&#x28;&#x38;&#x29;&#x5d;&#x29;</div></code></pre>
+
+    <button id='13' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<h3 class="question" id="q4">Question 4</h3>
+
+<p>Write a function <code>square_tree</code> that mutates a <code>Tree</code> with numerical entries so
+that each entry is squared.</p>
+
+
+    <button id='1' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def square_tree(t):
+    &quot;&quot;&quot;Mutates a Tree t by squaring all its elements.
+
+    &gt;&gt;&gt; t = Tree(1, [Tree(3, [Tree(5)]), Tree(7)])
+    &gt;&gt;&gt; square_tree(t)
+    &gt;&gt;&gt; t
+    Tree(1, [Tree(9, [Tree(25)]), Tree(49)])
+    &quot;&quot;&quot;
+<div class="alt 1">    "*** YOUR CODE HERE ***"
+</div><div class="solution 1">&#x20;&#x20;&#x20;&#x20;&#x74;&#x2e;&#x65;&#x6e;&#x74;&#x72;&#x79;&#x20;&#x3d;&#x20;&#x74;&#x2e;&#x65;&#x6e;&#x74;&#x72;&#x79;&#x20;&#x2a;&#x2a;&#x20;&#x32;&#xa;&#x20;&#x20;&#x20;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x73;&#x75;&#x62;&#x74;&#x72;&#x65;&#x65;&#x20;&#x69;&#x6e;&#x20;&#x74;&#x2e;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x73;&#x71;&#x75;&#x61;&#x72;&#x65;&#x5f;&#x74;&#x72;&#x65;&#x65;&#x28;&#x73;&#x75;&#x62;&#x74;&#x72;&#x65;&#x65;&#x29;</div></code></pre>
+
+
+
+
+<h2 id="extra-questions">Extra Questions</h2>
+
+
+<p>The following questions are for <strong>extra practice</strong> &mdash; they can be found in the
+<a href="lab07_extra.py">lab07_extra.py</a> file. It is recommended that you complete these
+problems on your own time.</p>
+
+<h3 class="question" id="q5">Question 5</h3>
+
+<p>Write a function <code>list_to_link</code> that converts a Python list to a <code>Link</code>.</p>
+
+
+    <button id='2' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def list_to_link(lst):
+    &quot;&quot;&quot;Takes a Python list and returns a Link with the same elements.
+
+    &gt;&gt;&gt; list_to_link([1, 2, 3])
+    Link(1, Link(2, Link(3)))
+    &quot;&quot;&quot;
+<div class="alt 2">    "*** YOUR CODE HERE ***"
+</div><div class="solution 2">&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x6e;&#x6f;&#x74;&#x20;&#x6c;&#x73;&#x74;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#xa;&#x20;&#x20;&#x20;&#x20;&#x65;&#x6c;&#x73;&#x65;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x73;&#x74;&#x5b;&#x30;&#x5d;&#x2c;&#x20;&#x6c;&#x69;&#x73;&#x74;&#x5f;&#x74;&#x6f;&#x5f;&#x6c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x73;&#x74;&#x5b;&#x31;&#x3a;&#x5d;&#x29;&#x29;</div></code></pre>
+
+
+
+<h3 class="question" id="q6">Question 6</h3>
+
+<p>Write a function <code>link_to_list</code> that converts a given <code>Link</code> to a
+Python list.</p>
+
+
+    <button id='3' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def link_to_list(link):
+    &quot;&quot;&quot;Takes a Link and returns a Python list with the same elements.
+
+    &gt;&gt;&gt; link = Link(1, Link(2, Link(3, Link(4))))
+    &gt;&gt;&gt; link_to_list(link)
+    [1, 2, 3, 4]
+    &gt;&gt;&gt; link_to_list(Link.empty)
+    []
+    &quot;&quot;&quot;
+<div class="alt 3">    "*** YOUR CODE HERE ***"
+</div><div class="solution 3">&#x20;&#x20;&#x20;&#x20;&#x23;&#x20;&#x52;&#x65;&#x63;&#x75;&#x72;&#x73;&#x69;&#x76;&#x65;&#x20;&#x73;&#x6f;&#x6c;&#x75;&#x74;&#x69;&#x6f;&#x6e;&#xa;&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x20;&#x69;&#x73;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x5b;&#x5d;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x5b;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x5d;&#x20;&#x2b;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x5f;&#x74;&#x6f;&#x5f;&#x6c;&#x69;&#x73;&#x74;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x29;&#xa;&#xa;&#x23;&#x20;&#x49;&#x74;&#x65;&#x72;&#x61;&#x74;&#x69;&#x76;&#x65;&#x20;&#x73;&#x6f;&#x6c;&#x75;&#x74;&#x69;&#x6f;&#x6e;&#xa;&#x64;&#x65;&#x66;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x5f;&#x74;&#x6f;&#x5f;&#x6c;&#x69;&#x73;&#x74;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x29;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x73;&#x75;&#x6c;&#x74;&#x20;&#x3d;&#x20;&#x5b;&#x5d;&#xa;&#x20;&#x20;&#x20;&#x20;&#x77;&#x68;&#x69;&#x6c;&#x65;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x20;&#x69;&#x73;&#x20;&#x6e;&#x6f;&#x74;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x73;&#x75;&#x6c;&#x74;&#x2e;&#x61;&#x70;&#x70;&#x65;&#x6e;&#x64;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x20;&#x3d;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x72;&#x65;&#x73;&#x75;&#x6c;&#x74;</div></code></pre>
+
+
+
+<h3 class="question" id="q7">Question 7</h3>
+
+<p>Implement a function <code>reverse</code> that reverses a given <code>Link</code>. <code>reverse</code> should
+return a new <code>Link</code> that is the reverse of the original, without modifying the
+original.</p>
+
+
+    <button id='4' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def reverse(link):
+    &quot;&quot;&quot;Returns a Link that is the reverse of the original.
+
+    &gt;&gt;&gt; reverse(Link(1))
+    Link(1)
+    &gt;&gt;&gt; link = Link(1, Link(2, Link(3)))
+    &gt;&gt;&gt; reverse(link)
+    Link(3, Link(2, Link(1)))
+    &gt;&gt;&gt; link
+    Link(1, Link(2, Link(3)))
+    &quot;&quot;&quot;
+<div class="alt 4">    "*** YOUR CODE HERE ***"
+</div><div class="solution 4">&#x20;&#x20;&#x20;&#x20;&#x6e;&#x65;&#x77;&#x20;&#x3d;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x77;&#x68;&#x69;&#x6c;&#x65;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x20;&#x69;&#x73;&#x20;&#x6e;&#x6f;&#x74;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x20;&#x3d;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6e;&#x65;&#x77;&#x20;&#x3d;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x2c;&#x20;&#x6e;&#x65;&#x77;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x6e;&#x65;&#x77;</div></code></pre>
+
+
+
+<p><strong>Extra for experts</strong>: Implement <code>mutate_reverse</code>, a recursive mutating version
+of <code>reverse</code>. Have it mutate the original <code>Link</code> so that its elements are
+reversed.</p>
+
+
+    <button id='5' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def mutate_reverse(link):
+    &quot;&quot;&quot;Mutates the Link so that its elements are reversed.
+
+    &gt;&gt;&gt; link = Link(1)
+    &gt;&gt;&gt; mutate_reverse(link)
+    &gt;&gt;&gt; link
+    Link(1)
+
+    &gt;&gt;&gt; link = Link(1, Link(2, Link(3)))
+    &gt;&gt;&gt; mutate_reverse(link)
+    &gt;&gt;&gt; link
+    Link(3, Link(2, Link(1)))
+    &quot;&quot;&quot;
+<div class="alt 5">    "*** YOUR CODE HERE ***"
+</div><div class="solution 5">&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x20;&#x69;&#x73;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x20;&#x6f;&#x72;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x20;&#x69;&#x73;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#xa;&#x20;&#x20;&#x20;&#x20;&#x6d;&#x75;&#x74;&#x61;&#x74;&#x65;&#x5f;&#x72;&#x65;&#x76;&#x65;&#x72;&#x73;&#x65;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x77;&#x68;&#x69;&#x6c;&#x65;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x20;&#x69;&#x73;&#x20;&#x6e;&#x6f;&#x74;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x2c;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x20;&#x3d;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x2c;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x20;&#x3d;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;</div></code></pre>
+
+
+
+<h3 class="question" id="q8">Question 8</h3>
+
+<p>Write a function <code>leaves</code> that returns a list of all the entries of the leaf nodes of a <code>Tree</code>.</p>
+
+
+    <button id='6' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def leaves(t):
+    &quot;&quot;&quot;Returns a list of all the entries of the leaf nodes of the Tree t.
+
+    &gt;&gt;&gt; leaves(Tree(1))
+    [1]
+    &gt;&gt;&gt; leaves(Tree(1, [Tree(2, [Tree(3)]), Tree(4)]))
+    [3, 4]
+    &quot;&quot;&quot;
+<div class="alt 6">    "*** YOUR CODE HERE ***"
+</div><div class="solution 6">&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x74;&#x2e;&#x69;&#x73;&#x5f;&#x6c;&#x65;&#x61;&#x66;&#x28;&#x29;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x5b;&#x74;&#x2e;&#x65;&#x6e;&#x74;&#x72;&#x79;&#x5d;&#xa;&#x20;&#x20;&#x20;&#x20;&#x61;&#x6c;&#x6c;&#x5f;&#x6c;&#x65;&#x61;&#x76;&#x65;&#x73;&#x20;&#x3d;&#x20;&#x5b;&#x5d;&#xa;&#x20;&#x20;&#x20;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x62;&#x20;&#x69;&#x6e;&#x20;&#x74;&#x2e;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x61;&#x6c;&#x6c;&#x5f;&#x6c;&#x65;&#x61;&#x76;&#x65;&#x73;&#x20;&#x2b;&#x3d;&#x20;&#x6c;&#x65;&#x61;&#x76;&#x65;&#x73;&#x28;&#x62;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x61;&#x6c;&#x6c;&#x5f;&#x6c;&#x65;&#x61;&#x76;&#x65;&#x73;</div></code></pre>
+
+
+
+<h3 class="question" id="q9">Question 9</h3>
+
+<p>Write a function <code>cumulative_sum</code> that returns a new <code>Tree</code>, where each entry is the sum of all entries in the corresponding subtree of the old <code>Tree</code>.</p>
+
+
+    <button id='7' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def cumulative_sum(t):
+    &quot;&quot;&quot;Return a new Tree, where each entry is the sum of all entries in the
+    corresponding subtree of t.
+
+    &gt;&gt;&gt; t = Tree(1, [Tree(3, [Tree(5)]), Tree(7)])
+    &gt;&gt;&gt; cumulative = cumulative_sum(t)
+    &gt;&gt;&gt; t
+    Tree(1, [Tree(3, [Tree(5)]), Tree(7)])
+    &gt;&gt;&gt; cumulative
+    Tree(16, [Tree(8, [Tree(5)]), Tree(7)])
+    &gt;&gt;&gt; cumulative_sum(Tree(1))
+    Tree(1)
+    &quot;&quot;&quot;
+<div class="alt 7">    "*** YOUR CODE HERE ***"
+</div><div class="solution 7">&#x20;&#x20;&#x20;&#x20;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x20;&#x3d;&#x20;&#x5b;&#x63;&#x75;&#x6d;&#x75;&#x6c;&#x61;&#x74;&#x69;&#x76;&#x65;&#x5f;&#x73;&#x75;&#x6d;&#x28;&#x73;&#x74;&#x29;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x73;&#x74;&#x20;&#x69;&#x6e;&#x20;&#x74;&#x2e;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x5d;&#xa;&#x20;&#x20;&#x20;&#x20;&#x6e;&#x65;&#x77;&#x5f;&#x65;&#x6e;&#x74;&#x72;&#x79;&#x20;&#x3d;&#x20;&#x73;&#x75;&#x6d;&#x28;&#x73;&#x74;&#x2e;&#x65;&#x6e;&#x74;&#x72;&#x79;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x73;&#x74;&#x20;&#x69;&#x6e;&#x20;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x29;&#x20;&#x2b;&#x20;&#x74;&#x2e;&#x65;&#x6e;&#x74;&#x72;&#x79;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x54;&#x72;&#x65;&#x65;&#x28;&#x6e;&#x65;&#x77;&#x5f;&#x65;&#x6e;&#x74;&#x72;&#x79;&#x2c;&#x20;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x29;</div></code></pre>
+
+
+
+<h3 class="question" id="q10">Question 10</h3>
+
+<p>Write a function <code>same_shape</code> that returns <code>True</code> if two <code>Tree</code>s have the same
+shape. Two trees have the same shape if they have the same number of children
+and each of their children have the same shape.</p>
+
+
+    <button id='8' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def same_shape(t1, t2):
+    &quot;&quot;&quot;Returns whether two Trees t1, t2 have the same shape. Two trees have the
+    same shape if they have the same number of branches and each of their
+    children have the same shape.
+
+    &gt;&gt;&gt; t, s = Tree(1), Tree(3)
+    &gt;&gt;&gt; same_shape(t, t)
+    True
+    &gt;&gt;&gt; same_shape(t, s)
+    True
+    &gt;&gt;&gt; t = Tree(1, [Tree(2), Tree(3)])
+    &gt;&gt;&gt; same_shape(t, s)
+    False
+    &gt;&gt;&gt; s = cumulative_sum(t)
+    &gt;&gt;&gt; same_shape(t, s)
+    True
+    &quot;&quot;&quot;
+<div class="alt 8">    "*** YOUR CODE HERE ***"
+</div><div class="solution 8">&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x6c;&#x65;&#x6e;&#x28;&#x74;&#x31;&#x2e;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x29;&#x20;&#x3d;&#x3d;&#x20;&#x6c;&#x65;&#x6e;&#x28;&#x74;&#x32;&#x2e;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x29;&#x20;&#x61;&#x6e;&#x64;&#x20;&#x5c;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x61;&#x6c;&#x6c;&#x28;&#x73;&#x61;&#x6d;&#x65;&#x5f;&#x73;&#x68;&#x61;&#x70;&#x65;&#x28;&#x73;&#x74;&#x31;&#x2c;&#x20;&#x73;&#x74;&#x32;&#x29;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x73;&#x74;&#x31;&#x2c;&#x20;&#x73;&#x74;&#x32;&#x20;&#x69;&#x6e;&#x20;&#x7a;&#x69;&#x70;&#x28;&#x74;&#x31;&#x2e;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x2c;&#x20;&#x74;&#x32;&#x2e;&#x62;&#x72;&#x61;&#x6e;&#x63;&#x68;&#x65;&#x73;&#x29;&#x29;</div></code></pre>
+
+
+
+
+<h2 id="folding-linked-lists">Folding Linked Lists</h2>
+
+
+<p>When we write recursive functions acting on <code>Link</code>s, we often find
+that they have the following form:</p>
+
+<pre><code>def func(link):
+    if link is Link.empty:
+        return &lt;Base case&gt;
+    else:
+        return &lt;Expression involving func(link.rest)&gt;</code></pre>
+
+<p>In the spirit of abstraction, we want to factor out this commonly seen
+pattern. It turns out that we can define an abstraction called <code>fold</code>
+that do this.</p>
+
+<p>A linked list can be represented as a series of <code>Link</code>
+constructors, where <code>Link.rest</code> is either another linked list or
+the empty list.</p>
+
+<p>We represent such a list in the diagram below:</p>
+
+<p><img src="assets/rightfold.png" alt="Right fold"></p>
+
+<p>In this diagram, the recursive list</p>
+
+<pre><code>Link(1, Link(2, Link(3, Link(4,Link(5)))))</code></pre>
+
+<p>is represented with <code>:</code> as the constructor and <code>[]</code> as the empty list.</p>
+
+<p>We define a function <code>foldr</code> that takes in a function <code>f</code> which takes two
+arguments, and a value <code>z</code>. <code>foldr</code> essentially replaces the <code>Link</code> constructor
+with <code>f</code>, and the empty list with <code>z</code>. It then evaluates the expression and
+returns the result. This is equivalent to:</p>
+
+<pre><code>f(1, f(2, f(3, f(4, f(5, z)))))</code></pre>
+
+<p>We call this operation a right fold.</p>
+
+<p>Similarily we can define a left fold <code>foldl</code> that folds a list starting
+from the beginning, such that the function <code>f</code> will be applied this
+way:</p>
+
+<pre><code>f(f(f(f(f(z, 1), 2), 3), 4), 5)</code></pre>
+
+<p><img src="assets/leftfold.png" alt="Left fold"></p>
+
+<p>Also notice that a left fold is equivalent to Python's <code>reduce</code> with a starting
+value.</p>
+
+<h3 class="question" id="q11">Question 11</h3>
+
+<p>Write the left fold function by filling in the blanks.</p>
+
+
+    <button id='9' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def foldl(link, fn, z):
+    &quot;&quot;&quot; Left fold
+    &gt;&gt;&gt; lst = Link(3, Link(2, Link(1)))
+    &gt;&gt;&gt; foldl(lst, sub, 0) # (((0 &#x2d; 3) &#x2d; 2) &#x2d; 1)
+    &#x2d;6
+    &gt;&gt;&gt; foldl(lst, add, 0) # (((0 + 3) + 2) + 1)
+    6
+    &gt;&gt;&gt; foldl(lst, mul, 1) # (((1 * 3) * 2) * 1)
+    6
+    &quot;&quot;&quot;
+    if link is Link.empty:
+        return z
+<div class="alt 9">    "*** YOUR CODE HERE ***"
+    return foldl(______, ______, ______)
+</div><div class="solution 9">&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x66;&#x6f;&#x6c;&#x64;&#x6c;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x2c;&#x20;&#x66;&#x6e;&#x2c;&#x20;&#x66;&#x6e;&#x28;&#x7a;&#x2c;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x29;&#x29;</div></code></pre>
+
+
+
+<h3 class="question" id="q12">Question 12</h3>
+
+<p>Now write the right fold function.</p>
+
+
+    <button id='10' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def foldr(link, fn, z):
+    &quot;&quot;&quot; Right fold
+    &gt;&gt;&gt; lst = Link(3, Link(2, Link(1)))
+    &gt;&gt;&gt; foldr(lst, sub, 0) # (3 &#x2d; (2 &#x2d; (1 &#x2d; 0)))
+    2
+    &gt;&gt;&gt; foldr(lst, add, 0) # (3 + (2 + (1 + 0)))
+    6
+    &gt;&gt;&gt; foldr(lst, mul, 1) # (3 * (2 * (1 * 1)))
+    6
+    &quot;&quot;&quot;
+<div class="alt 10">    "*** YOUR CODE HERE ***"
+</div><div class="solution 10">&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x6c;&#x69;&#x6e;&#x6b;&#x20;&#x69;&#x73;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x7a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x66;&#x6e;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x2c;&#x20;&#x66;&#x6f;&#x6c;&#x64;&#x72;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x2c;&#x20;&#x66;&#x6e;&#x2c;&#x20;&#x7a;&#x29;&#x29;</div></code></pre>
+
+
+
+<h3 class="question" id="q13">Question 13: Extra for Experts</h3>
+
+<p>Write <code>foldl</code> using <code>foldr</code>! You only need to fill in the <code>step</code>
+function.</p>
+
+
+    <button id='11' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>identity = lambda x: x
+
+def foldl2(link, fn, z):
+    &quot;&quot;&quot; Write foldl using foldr
+    &gt;&gt;&gt; list = Link(3, Link(2, Link(1)))
+    &gt;&gt;&gt; foldl2(list, sub, 0) # (((0 &#x2d; 3) &#x2d; 2) &#x2d; 1)
+    &#x2d;6
+    &gt;&gt;&gt; foldl2(list, add, 0) # (((0 + 3) + 2) + 1)
+    6
+    &gt;&gt;&gt; foldl2(list, mul, 1) # (((1 * 3) * 2) * 1)
+    6
+    &quot;&quot;&quot;
+    def step(x, g):
+<div class="alt 11">        "*** YOUR CODE HERE ***"
+</div><div class="solution 11">&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x6c;&#x61;&#x6d;&#x62;&#x64;&#x61;&#x20;&#x61;&#x3a;&#x20;&#x67;&#x28;&#x66;&#x6e;&#x28;&#x61;&#x2c;&#x20;&#x78;&#x29;&#x29;</div>    return foldr(link, step, identity)(z)</code></pre>
+
+
+
+
+  </body>
+
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+  $(function() {
+    if (new Date("03/13/2015") < new Date()) {
+      $('.toggleButton').css('display', 'inline-block');
+      $('.toggleButton').click(function() {
+        var solution_id = $(this).attr('id');
+        $('div.' + solution_id).slideToggle(600);
+      });
+    }
+    // Always display these toggle buttons
+    $('.toggleButtonShow').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+  });
+</script>
+</html>
