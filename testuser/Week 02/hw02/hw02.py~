@@ -24,7 +24,7 @@ def piecewise(f, g, b):
     >>> abs_value(-1)
     1
     """
-    "*** YOUR CODE HERE ***"
+    "hello world"
 
 def repeated(f, n):
     """Return the function that computes the nth application of f.

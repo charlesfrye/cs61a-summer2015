@@ -39,7 +39,7 @@ def repeated(f, n):
     >>> repeated(square, 4)(5) # square(square(square(square(5))))
     152587890625
     """
-    "*** YOUR CODE HERE ***"
+    "hello world #2"
 
 def compose1(f, g):
     """Return a function h, such that h(x) = f(g(x))."""
