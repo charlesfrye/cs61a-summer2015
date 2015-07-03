@@ -12,7 +12,7 @@ def g(n):
     >>> g(5)
     22
     """
-    "hello again"
+    "*** YOUR CODE HERE ***"
 
 def g_iter(n):
     """Return the value of G(n), computed iteratively.
