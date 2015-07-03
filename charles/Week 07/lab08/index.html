@@ -1,0 +1,391 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="description" content ="CS61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Soumya Basu, Kevin Chen, Rohan Chitnis, Timothy Greeno, Jessica Gu, Brian Hou, Robert Huang, Andrew Huang, Joy Jeng, Austin Le, Youri Park, Harold Pimentel, Sumukh Sridhara, Steven Tang, Michelle Tian, Alana Tran, Dickson Tsai, Max Wolffe, Albert Wu, Marvin Zhang" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" type="text/css" href="../../assets/css/resource.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/lab.css" />
+<link rel="stylesheet" type="text/css" href="../../assets/coding-js/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="../../assets/coding-js/coding.css" />
+
+    <title>Lab 8: Linked Lists and Sets | CS 61A Spring 2015</title>
+
+  </head>
+  <body style="font-family: Georgia,serif;">
+    <h1 id="title-main">Lab 8: Linked Lists and Sets</h1>
+
+    <p><i>Due at 11:59pm on 03/19/2015.</i></p>
+
+<h2>Starter Files</h2>
+
+<p>Download <a href="lab08.zip">lab08.zip</a>.
+Inside the archive, you will find starter files for the questions in this lab,
+  along with a copy of the <a href="ok">OK</a> autograder.</p>
+
+<h2>Submission</h2>
+
+<p>By the end of this lab, you should have submitted the lab with
+<code>python3 ok --submit</code>. You may submit more than once before the
+deadline; only the final submission will be graded.</p>
+
+
+<ul>
+  <li>To receive credit for this lab, you must complete questions 1-5 in
+  <a href="lab08.py">lab08.py</a> and submit through OK.</li>
+  <li>Questions 6-10 are <em>extra practice</em>. They 
+  can be found in the <a href="lab08_extra.py">lab08_extra.py</a> file. It is 
+  recommended that you complete these problems on your own time.</li>
+</ul>
+
+
+    <h2 id='table-of-contents'>Table of Contents</h2>
+    <ul>
+  <li><a href="index.html#linked-lists">Linked Lists</a></li>
+  <ul>
+  <li><a href="index.html#q1">Question 1</a></li>
+</ul>
+
+  <li><a href="index.html#sets">Sets</a></li>
+  <ul>
+  <li><a href="index.html#q2">Question 2</a></li>
+  <li><a href="index.html#q3">Question 3</a></li>
+  <li><a href="index.html#q4">Question 4</a></li>
+  <li><a href="index.html#q5">Question 5</a></li>
+</ul>
+
+  <li><a href="index.html#extra-questions">Extra Questions</a></li>
+  <ul>
+  <li><a href="index.html#q6">Question 6</a></li>
+  <li><a href="index.html#q7">Question 7</a></li>
+  <li><a href="index.html#q8">Question 8</a></li>
+  <li><a href="index.html#q9">Question 9</a></li>
+  <li><a href="index.html#q10">Question 10: Extra for Experts</a></li>
+</ul>
+
+</ul>
+
+
+    
+
+
+<h2 id="linked-lists">Linked Lists</h2>
+
+
+<h3 class="question" id="q1">Question 1</h3>
+Implement a function <code>slice_link</code> that slices a given Link. <code>slice_link</code>
+should slice the Link starting at <code>start</code> and ending one element before 
+<code>end</code>, as with a normal Python list.
+
+
+    <button id='0' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def slice_link(link, start, end):
+    &quot;&quot;&quot;Slices a Link from start to end (as with a normal Python list).
+
+    &gt;&gt;&gt; link = Link(3, Link(1, Link(4, Link(1, Link(5, Link(9))))))
+    &gt;&gt;&gt; slice_link(link, 1, 4)
+    Link(1, Link(4, Link(1)))
+    &quot;&quot;&quot;
+<div class="alt 0">    "*** YOUR CODE HERE ***"
+</div><div class="solution 0">&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x65;&#x6e;&#x64;&#x20;&#x3d;&#x3d;&#x20;&#x30;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x2e;&#x65;&#x6d;&#x70;&#x74;&#x79;&#xa;&#x20;&#x20;&#x20;&#x20;&#x65;&#x6c;&#x69;&#x66;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x20;&#x3d;&#x3d;&#x20;&#x30;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x4c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x66;&#x69;&#x72;&#x73;&#x74;&#x2c;&#x20;&#x73;&#x6c;&#x69;&#x63;&#x65;&#x5f;&#x6c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x2c;&#x20;&#x30;&#x2c;&#x20;&#x65;&#x6e;&#x64;&#x2d;&#x31;&#x29;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x65;&#x6c;&#x73;&#x65;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x73;&#x6c;&#x69;&#x63;&#x65;&#x5f;&#x6c;&#x69;&#x6e;&#x6b;&#x28;&#x6c;&#x69;&#x6e;&#x6b;&#x2e;&#x72;&#x65;&#x73;&#x74;&#x2c;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x2d;&#x31;&#x2c;&#x20;&#x65;&#x6e;&#x64;&#x2d;&#x31;&#x29;</div></code></pre>
+
+
+
+
+<h2 id="sets">Sets</h2>
+
+
+<p>A set is an unordered collection of distinct objects that supports
+membership testing, union, intersection, and adjunction:</p>
+
+<ul>
+  <li><p>Construction</p>
+
+<pre><code>&gt;&gt;&gt; empty = set() # construct an empty set
+&gt;&gt;&gt; s = {3, 2, 1, 4, 4}
+&gt;&gt;&gt; s
+{1, 2, 3, 4}</code></pre></li>
+  <li><p>Adjunction:</p>
+
+<pre><code>&gt;&gt;&gt; s.add(5)
+&gt;&gt;&gt; s
+{1, 2, 3, 4, 5}</code></pre></li>
+  <li><p>Operations</p>
+
+<pre><code>&gt;&gt;&gt; 3 in s
+True
+&gt;&gt;&gt; 7 not in s
+True
+&gt;&gt;&gt; len(s)
+5
+&gt;&gt;&gt; s.union({1, 5})
+{1, 2, 3, 4, 5}
+&gt;&gt;&gt; s.intersection({6, 5, 4, 3})
+{3, 4, 5}</code></pre></li>
+</ul>
+
+<p>For more detail on Sets you can go to this
+<a href="http://docs.python.org/py3k/library/stdtypes.html#set">link</a></p>
+
+<h3 class="question" id="q2">Question 2</h3>
+
+<p>Implement the union function for sets. Union takes in two sets, and
+returns a new set with elements from the first set, and all other
+elements that have not already have been seen in the second set.</p>
+
+
+    <button id='1' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def union(s1, s2):
+    &quot;&quot;&quot;Returns the union of two sets.
+
+    &gt;&gt;&gt; r = {0, 6, 6}
+    &gt;&gt;&gt; s = {1, 2, 3, 4}
+    &gt;&gt;&gt; t = union(s, {1, 6})
+    &gt;&gt;&gt; t
+    {1, 2, 3, 4, 6}
+    &gt;&gt;&gt; union(r, t)
+    {0, 1, 2, 3, 4, 6}
+    &quot;&quot;&quot;
+<div class="alt 1">    "*** YOUR CODE HERE ***"
+</div><div class="solution 1">&#x20;&#x20;&#x20;&#x20;&#x75;&#x6e;&#x69;&#x6f;&#x6e;&#x5f;&#x73;&#x65;&#x74;&#x20;&#x3d;&#x20;&#x73;&#x65;&#x74;&#x28;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x20;&#x69;&#x6e;&#x20;&#x73;&#x31;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x75;&#x6e;&#x69;&#x6f;&#x6e;&#x5f;&#x73;&#x65;&#x74;&#x2e;&#x61;&#x64;&#x64;&#x28;&#x65;&#x6c;&#x65;&#x6d;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x20;&#x69;&#x6e;&#x20;&#x73;&#x32;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x75;&#x6e;&#x69;&#x6f;&#x6e;&#x5f;&#x73;&#x65;&#x74;&#x2e;&#x61;&#x64;&#x64;&#x28;&#x65;&#x6c;&#x65;&#x6d;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x75;&#x6e;&#x69;&#x6f;&#x6e;&#x5f;&#x73;&#x65;&#x74;</div></code></pre>
+
+
+
+<h3 class="question" id="q3">Question 3</h3>
+
+<p>Implement the intersection function for two sets. Intersection takes in
+two sets and returns a new set of only the elements in both sets.</p>
+
+
+    <button id='2' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def intersection(s1, s2):
+    &quot;&quot;&quot;Returns the intersection of two sets.
+
+    &gt;&gt;&gt; r = {0, 1, 4, 0}
+    &gt;&gt;&gt; s = {1, 2, 3, 4}
+    &gt;&gt;&gt; t = intersection(s, {3, 4, 2})
+    &gt;&gt;&gt; t
+    {2, 3, 4}
+    &gt;&gt;&gt; intersection(r, t)
+    {4}
+    &quot;&quot;&quot;
+<div class="alt 2">    "*** YOUR CODE HERE ***"
+</div><div class="solution 2">&#x20;&#x20;&#x20;&#x20;&#x69;&#x6e;&#x74;&#x65;&#x72;&#x73;&#x65;&#x63;&#x74;&#x69;&#x6f;&#x6e;&#x5f;&#x73;&#x65;&#x74;&#x20;&#x3d;&#x20;&#x73;&#x65;&#x74;&#x28;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x20;&#x69;&#x6e;&#x20;&#x73;&#x31;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x20;&#x69;&#x6e;&#x20;&#x73;&#x32;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x69;&#x6e;&#x74;&#x65;&#x72;&#x73;&#x65;&#x63;&#x74;&#x69;&#x6f;&#x6e;&#x5f;&#x73;&#x65;&#x74;&#x2e;&#x61;&#x64;&#x64;&#x28;&#x65;&#x6c;&#x65;&#x6d;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x69;&#x6e;&#x74;&#x65;&#x72;&#x73;&#x65;&#x63;&#x74;&#x69;&#x6f;&#x6e;&#x5f;&#x73;&#x65;&#x74;</div></code></pre>
+
+
+
+<h3 class="question" id="q4">Question 4</h3>
+
+<p>Write the following function so it runs in O(n) time.</p>
+
+
+    <button id='3' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def extra_elem(a,b):
+    &quot;&quot;&quot;B contains every element in A, and has one additional member, find
+    the additional member.
+
+    &gt;&gt;&gt; extra_elem([&#x27;dog&#x27;, &#x27;cat&#x27;, &#x27;monkey&#x27;],  [&#x27;dog&#x27;,  &#x27;cat&#x27;,  &#x27;monkey&#x27;,  &#x27;giraffe&#x27;])
+    &#x27;giraffe&#x27;
+    &gt;&gt;&gt; extra_elem([1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6])
+    6
+    &quot;&quot;&quot;
+<div class="alt 3">    "*** YOUR CODE HERE ***"
+</div><div class="solution 3">&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x6c;&#x69;&#x73;&#x74;&#x28;&#x73;&#x65;&#x74;&#x28;&#x62;&#x29;&#x20;&#x2d;&#x20;&#x73;&#x65;&#x74;&#x28;&#x61;&#x29;&#x29;&#x5b;&#x30;&#x5d;</div></code></pre>
+
+
+
+<h3 class="question" id="q5">Question 5</h3>
+
+<p>Write the following function so it runs in O(n) time.</p>
+
+
+    <button id='4' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def find_duplicates(lst):
+    &quot;&quot;&quot;Returns True if lst has any duplicates and False if it does not.
+
+    &gt;&gt;&gt; find_duplicates([1, 2, 3, 4, 5])
+    False
+    &gt;&gt;&gt; find_duplicates([1, 2, 3, 4, 2])
+    True
+    &quot;&quot;&quot;
+<div class="alt 4">    "*** YOUR CODE HERE ***"
+</div><div class="solution 4">&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x6c;&#x65;&#x6e;&#x28;&#x73;&#x65;&#x74;&#x28;&#x6c;&#x73;&#x74;&#x29;&#x29;&#x20;&#x21;&#x3d;&#x20;&#x6c;&#x65;&#x6e;&#x28;&#x6c;&#x73;&#x74;&#x29;</div></code></pre>
+
+
+
+
+<h2 id="extra-questions">Extra Questions</h2>
+
+
+<p>The following questions are for <strong>extra practice</strong> &mdash; they can be found
+in the <a href="lab08_extra.py">lab08_extra.py</a> file. It is recommended that
+you complete these problems on your own time.</p>
+
+<h3 class="question" id="q6">Question 6</h3>
+
+<p>Write the following function so it runs in O(n) time.</p>
+
+
+    <button id='5' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def add_up(n, lst):
+    &quot;&quot;&quot;Returns True if any two non identical elements in lst add up to any n.
+
+    &gt;&gt;&gt; add_up(100, [1, 2, 3, 4, 5])
+    False
+    &gt;&gt;&gt; add_up(7, [1, 2, 3, 4, 2])
+    True
+    &gt;&gt;&gt; add_up(10, [5, 5])
+    False
+    &quot;&quot;&quot;
+<div class="alt 5">    "*** YOUR CODE HERE ***"
+</div><div class="solution 5">&#x20;&#x20;&#x20;&#x20;&#x63;&#x68;&#x65;&#x63;&#x6b;&#x5f;&#x73;&#x65;&#x74;&#x20;&#x3d;&#x20;&#x73;&#x65;&#x74;&#x28;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x20;&#x69;&#x6e;&#x20;&#x6c;&#x73;&#x74;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x6e;&#x20;&#x2d;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x20;&#x21;&#x3d;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x63;&#x68;&#x65;&#x63;&#x6b;&#x5f;&#x73;&#x65;&#x74;&#x2e;&#x61;&#x64;&#x64;&#x28;&#x6e;&#x20;&#x2d;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x62;&#x6f;&#x6f;&#x6c;&#x28;&#x69;&#x6e;&#x74;&#x65;&#x72;&#x73;&#x65;&#x63;&#x74;&#x69;&#x6f;&#x6e;&#x28;&#x63;&#x68;&#x65;&#x63;&#x6b;&#x5f;&#x73;&#x65;&#x74;&#x2c;&#x20;&#x73;&#x65;&#x74;&#x28;&#x6c;&#x73;&#x74;&#x29;&#x29;&#x29;</div></code></pre>
+
+
+
+<h3 class="question" id="q7">Question 7</h3>
+
+<p>Write the following function so it runs in O(log n) time.</p>
+
+
+    <button id='6' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def pow(n,k):
+    &quot;&quot;&quot;Computes n^k.
+
+    &gt;&gt;&gt; pow(2, 3)
+    8
+    &gt;&gt;&gt; pow(4, 2)
+    16
+    &quot;&quot;&quot;
+<div class="alt 6">    "*** YOUR CODE HERE ***"
+</div><div class="solution 6">&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x6b;&#x20;&#x3d;&#x3d;&#x20;&#x31;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x6e;&#xa;&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x6b;&#x20;&#x25;&#x20;&#x32;&#x20;&#x3d;&#x3d;&#x20;&#x30;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x70;&#x6f;&#x77;&#x28;&#x6e;&#x2a;&#x6e;&#x2c;&#x6b;&#x2f;&#x2f;&#x32;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x65;&#x6c;&#x73;&#x65;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x6e;&#x20;&#x2a;&#x20;&#x70;&#x6f;&#x77;&#x28;&#x6e;&#x2a;&#x6e;&#x2c;&#x20;&#x6b;&#x2f;&#x2f;&#x32;&#x29;</div></code></pre>
+
+
+
+<h3 class="question" id="q8">Question 8</h3>
+
+<p>Write the following function so it runs in O(n) time.</p>
+
+
+    <button id='7' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def missing_no(lst):
+    &quot;&quot;&quot;lst contains all the numbers from 1 to n for some n except some
+    number k. Find k.
+
+    &gt;&gt;&gt; missing_no([1, 0, 4, 5, 7, 9, 2, 6, 3])
+    8
+    &gt;&gt;&gt; missing_no(list(filter(lambda x: x != 293, list(range(2000)))))
+    293
+    &quot;&quot;&quot;
+<div class="alt 7">    "*** YOUR CODE HERE ***"
+</div><div class="solution 7">&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x73;&#x75;&#x6d;&#x28;&#x72;&#x61;&#x6e;&#x67;&#x65;&#x28;&#x6d;&#x61;&#x78;&#x28;&#x6c;&#x73;&#x74;&#x29;&#x20;&#x2b;&#x20;&#x31;&#x29;&#x29;&#x20;&#x2d;&#x20;&#x73;&#x75;&#x6d;&#x28;&#x6c;&#x73;&#x74;&#x29;</div></code></pre>
+
+
+
+<h3 class="question" id="q9">Question 9</h3>
+
+<p>Write the following function so it runs in O(n) time.</p>
+
+
+    <button id='8' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>def find_duplicates_k(k, lst):
+    &quot;&quot;&quot;Returns True if there are any duplicates in lst that are within k
+    indices apart.
+
+    &gt;&gt;&gt; find_duplicates_k(3, [1, 2, 3, 4, 1])
+    False
+    &gt;&gt;&gt; find_duplicates_k(4, [1, 2, 3, 4, 1])
+    True
+    &quot;&quot;&quot;
+<div class="alt 8">    "*** YOUR CODE HERE ***"
+</div><div class="solution 8">&#x20;&#x20;&#x20;&#x20;&#x70;&#x72;&#x65;&#x76;&#x5f;&#x73;&#x65;&#x74;&#x20;&#x3d;&#x20;&#x73;&#x65;&#x74;&#x28;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x66;&#x6f;&#x72;&#x20;&#x69;&#x2c;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x20;&#x69;&#x6e;&#x20;&#x65;&#x6e;&#x75;&#x6d;&#x65;&#x72;&#x61;&#x74;&#x65;&#x28;&#x6c;&#x73;&#x74;&#x29;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x65;&#x6c;&#x65;&#x6d;&#x20;&#x69;&#x6e;&#x20;&#x70;&#x72;&#x65;&#x76;&#x5f;&#x73;&#x65;&#x74;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x54;&#x72;&#x75;&#x65;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x70;&#x72;&#x65;&#x76;&#x5f;&#x73;&#x65;&#x74;&#x2e;&#x61;&#x64;&#x64;&#x28;&#x65;&#x6c;&#x65;&#x6d;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x69;&#x66;&#x20;&#x69;&#x20;&#x2d;&#x20;&#x6b;&#x20;&#x3e;&#x3d;&#x20;&#x30;&#x3a;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x70;&#x72;&#x65;&#x76;&#x5f;&#x73;&#x65;&#x74;&#x2e;&#x72;&#x65;&#x6d;&#x6f;&#x76;&#x65;&#x28;&#x6c;&#x73;&#x74;&#x5b;&#x69;&#x20;&#x2d;&#x20;&#x6b;&#x5d;&#x29;&#xa;&#x20;&#x20;&#x20;&#x20;&#x72;&#x65;&#x74;&#x75;&#x72;&#x6e;&#x20;&#x46;&#x61;&#x6c;&#x73;&#x65;</div></code></pre>
+
+
+
+<h3 class="question" id="q10">Question 10: Extra for Experts</h3>
+
+<p>Write the following function so it runs in O(n) time.</p>
+
+<pre><code>def find_duplicates_k_l(k, l, lst):
+    &quot;&quot;&quot;Returns True if there are any two values who in lst that are within k
+    indices apart AND if the absolute value of their difference is less than
+    or equal to l.
+
+    &gt;&gt;&gt; find_duplicates_k_l(4, 0, [1, 2, 3, 4, 5])
+    False
+    &gt;&gt;&gt; find_duplicates_k_l(4, 1, [1, 2, 3, 4, 5])
+    True
+    &gt;&gt;&gt; find_duplicates_k_l(4, 0, [1, 2, 3, 4, 1])
+    True
+    &gt;&gt;&gt; find_duplicates_k_l(2, 0, [1, 2, 3, 4, 1])
+    False
+    &gt;&gt;&gt; find_duplicates_k_l(1, 100, [100, 275, 320, 988, 27])
+    True
+    &gt;&gt;&gt; find_duplicates_k_l(1, 100, [100, 199, 275, 320, 988, 27])
+    True
+    &gt;&gt;&gt; find_duplicates_k_l(1, 100, [100, 23, 199, 275, 320, 988, 27])
+    True
+    &gt;&gt;&gt; find_duplicates_k_l(2, 100, [100, 23, 199, 275, 320, 988, 27])
+    True
+    &quot;&quot;&quot;
+    &quot;*** YOUR CODE HERE ***&quot;</code></pre>
+
+  </body>
+
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+  $(function() {
+    if (new Date("03/20/2015") < new Date()) {
+      $('.toggleButton').css('display', 'inline-block');
+      $('.toggleButton').click(function() {
+        var solution_id = $(this).attr('id');
+        $('div.' + solution_id).slideToggle(600);
+      });
+    }
+    // Always display these toggle buttons
+    $('.toggleButtonShow').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+  });
+</script>
+</html>
