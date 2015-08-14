@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="description" content ="CS61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Soumya Basu, Kevin Chen, Rohan Chitnis, Timothy Greeno, Jessica Gu, Brian Hou, Robert Huang, Andrew Huang, Joy Jeng, Austin Le, Youri Park, Harold Pimentel, Sumukh Sridhara, Steven Tang, Michelle Tian, Alana Tran, Dickson Tsai, Max Wolffe, Albert Wu, Marvin Zhang" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" type="text/css" href="../../assets/css/resource.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/lab.css" />
+<link rel="stylesheet" type="text/css" href="../../assets/coding-js/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="../../assets/coding-js/coding.css" />
+
+    <title>Lab 12: SQL | CS 61A Spring 2015</title>
+
+  </head>
+  <body style="font-family: Georgia,serif;">
+    <h1 id="title-main">Lab 12: SQL</h1>
+
+    <p><i>Due at 11:59pm on 4/22/2015.</i></p>
+
+<h2>Starter Files</h2>
+
+<p>Download <a href="lab12.zip">lab12.zip</a>.
+Inside the archive, you will find starter files for the questions in this lab,
+  along with a copy of the <a href="ok">OK</a> autograder.</p>
+
+<h2>Submission</h2>
+
+<p>By the end of this lab, you should have submitted the lab with
+<code>python3 ok --submit</code>. You may submit more than once before the
+deadline; only the final submission will be graded.</p>
+
+
+<ul>
+  <li>To receive credit for this lab, you must complete Questions 1, 2, 3,
+  and 4 in <a href="lab12.sql">lab12.sql</a> and submit through OK.</li>
+  <li>The rest are questions that are considered <strong>extra practice</strong>.
+  They can be found in the <a href="lab12_extra.sql">lab12_extra.sql</a> file. It is
+  recommended that you complete these problems on your own time.</li>
+</ul>
+
+
+    <h2 id='table-of-contents'>Table of Contents</h2>
+    <ul>
+  <li><a href="../lab12.1#setup">Setup</a></li>
+  <ul>
+  <li><a href="../lab12.1#windows">Windows</a></li>
+  <li><a href="../lab12.1#mac-os-x">Mac OS X</a></li>
+  <li><a href="../lab12.1#ubuntu">Ubuntu</a></li>
+</ul>
+
+  <li><a href="../lab12.1#using-sqlite">Using SQLite</a></li>
+  <li><a href="../lab12.1#introduction">Introduction</a></li>
+  <li><a href="../lab12.1#questions">Questions</a></li>
+  <ul>
+  <li><a href="../lab12.1#q1">Question 1: What will SQL print?</a></li>
+  <li><a href="../lab12.1#q2">Question 2: Adjacent</a></li>
+  <li><a href="../lab12.1#q3">Question 3: Distances</a></li>
+  <li><a href="../lab12.1#q4">Question 4: Three-Hop</a></li>
+</ul>
+
+  <li><a href="../lab12.1#extra-questions">Extra Questions</a></li>
+  <ul>
+  <li><a href="../lab12.1#q5">Question 5: Alphabetical Path</a></li>
+  <li><a href="../lab12.1#q6">Question 6: Inland Distances</a></li>
+</ul>
+
+</ul>
+
+
+    
+
+
+<h2 id="setup">Setup</h2>
+
+<p>The simplest way to start using SQLite is to download a precompiled
+binary from the <a href="http://www.sqlite.org/download.html">SQLite website</a>.
+The latest version of SQLite at the time of writing is 3.8.9, but you
+can check for additional updates on the website.</p>
+
+
+<h3 id="windows">Windows</h3>
+
+
+<ol>
+  <li>Visit the download page linked above and navigate to the section
+  Precompiled Binaries for Windows. Click on the link
+  <strong>sqlite-shell-win32-x86-*.zip</strong> to download the binary.</li>
+  <li>Unzip the file. There should be a <code>sqlite3.exe</code> file in the
+  directory after extraction.</li>
+  <li><p>Navigate to the folder containing the <code>sqlite3.exe</code> file and check
+  that the version is at least 3.8.3:</p>
+
+<pre><code>$ cd path/to/sqlite
+$ sqlite3 &#x2d;&#x2d;version
+3.8.9 2015&#x2d;04&#x2d;08 12:16:33 8a8ffc862e96f57aa698f93de10dee28e69f6e09</code></pre></li>
+</ol>
+
+
+<h3 id="mac-os-x">Mac OS X</h3>
+
+
+<ol>
+  <li>Visit the download page linked above and navigate to the section
+  <strong>Precompiled Binaries for Mac OS X (x86)</strong>. Click on
+  the link <strong>sqlite-shell-osx-x86-*.zip</strong> to download the
+  binary.</li>
+  <li>Unzip the file. There should be a <code>sqlite3</code> file in the directory
+  after extraction.</li>
+  <li><p>Navigate to the folder containing the <code>sqlite3</code> file and check that
+  the version is at least 3.8.3:</p>
+
+<pre><code>$ cd path/to/sqlite
+$ ./sqlite3 &#x2d;&#x2d;version
+3.8.9 2015&#x2d;04&#x2d;08 12:16:33 8a8ffc862e96f57aa698f93de10dee28e69f6e09</code></pre></li>
+</ol>
+
+
+<h3 id="ubuntu">Ubuntu</h3>
+
+<p>The easiest way to use SQLite on Ubuntu is to install it straight from
+the native repositories (the version will be slightly behind the most
+recent release):</p>
+
+<pre><code>$ sudo apt&#x2d;get install sqlite3
+$ sqlite3 &#x2d;&#x2d;version
+3.8.6 2014&#x2d;08&#x2d;15 11:46:33 9491ba7d738528f168657adb43a198238abde19e</code></pre>
+
+
+<h2 id="using-sqlite">Using SQLite</h2>
+
+
+<ol>
+  <li>Make sure that <code>sqlite3.exe</code> file is in the same directory as your
+  <code>.sql</code> file. (Extract and move it out from the zip file you
+  downloaded.)</li>
+  <li>After writing your code in the <code>.sql</code> file, you can test and verify
+  your output in terminal/GitBash with one of the two following
+  commands.</li>
+</ol>
+
+<p>The first one runs your code and then exits SQLite immediately
+afterwards.</p>
+
+<ul>
+  <li><p>Windows/Ubuntu</p>
+
+<pre><code>sqlite3 &lt; lab12.sql</code></pre></li>
+  <li><p>Mac OS X</p>
+
+<pre><code>./sqlite3 &lt; lab12.sql</code></pre></li>
+</ul>
+
+<p>The second one runs your code and keeps SQLite open for further
+commands, which is similar to running Python code with the interactive
+<code>&#x2d;i</code> flag. You can type <code>.help</code> to see some of the commands you can run.</p>
+
+<ul>
+  <li><p>Windows/Ubuntu</p>
+
+<pre><code>sqlite3 &#x2d;&#x2d;init lab12.sql</code></pre></li>
+  <li><p>Mac OS X</p>
+
+<pre><code>./sqlite3 &#x2d;&#x2d;init lab12.sql</code></pre></li>
+</ul>
+
+<p>To exit out of SQLite after using the second command, you can type
+<code>.exit</code> or <code>.quit</code>.</p>
+
+
+<h2 id="introduction">Introduction</h2>
+
+<p>There are two basic ways of creating tables in SQL:</p>
+
+<pre><code>select [val] as [type], ... union
+select ...                       ;</code></pre>
+
+<p>Or more commonly,</p>
+
+<pre><code>select [columns] from [tables] where [condition] order by [order]</code></pre>
+
+<p>We can construct tables (or relations) with the create table statement:</p>
+
+<pre><code>sqlite&gt; create table Football as
+ ...&gt; select 30 as Berkeley, 7 as Stanford, 2002 as year union
+ ...&gt; select 28,             16,            2003 order by year;</code></pre>
+
+<p>Here we have created a table called <code>Football</code>, which has three attributes: Berkeley, Stanford, and year. We can select all the values of an attribute from a table with the select statement:</p>
+
+<pre><code>sqlite&gt; select Berkeley from Football where year &gt; 2002;
+28</code></pre>
+
+<p>Here we selected Berkeley's score for all years after 2002.</p>
+
+<p>We can use joins to include rows from another table that satisfy the where predicate. Joins can either be on different tables, or the same table if we include an alias. Here we are referencing the football table twice, once as the alias <code>a</code> and once as the alias <code>b</code>.</p>
+
+<pre><code>sqlite&gt; select a.Berkeley &#x2d; b.Berkeley, a.Stanford &#x2d; b.Stanford
+...&gt;        from Football as a, Football as b where a.year &gt; b.year;
+
+&#x2d;2|9</code></pre>
+
+<p>There are some fundamental operations you can perform:</p>
+
+<ul>
+  <li>comparisons: <code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;&gt;</code> ("not equal")</li>
+  <li>booleans: <code>and</code>, <code>or</code></li>
+  <li>arithmatic: <code>+</code>, <code>&#x2d;</code>, <code>*</code>, <code>/</code></li>
+</ul>
+
+<p>A table defined within a <code>with</code> clause may have a single recursive case
+that defines output rows in terms of other output rows.</p>
+
+<pre><code>sqlite&gt; with
+   ...&gt;   fib(previous, current) as (
+   ...&gt;     select 0, 1 union
+   ...&gt;     select current, previous+current from fib
+   ...&gt;     where current &lt;= 20
+   ...&gt;   )
+   ...&gt; select previous from fib;
+0
+1
+1
+2
+3
+5
+8
+13</code></pre>
+
+<p>In addition, you can also perform string manipulation, such as combining strings (concatonation) with the <code>||</code> operator:</p>
+
+<pre><code>sqlite&gt; select &quot;hello&quot; || &quot; &quot; || &quot;world&quot;
+hello world</code></pre>
+
+
+<h2 id="questions">Questions</h2>
+
+
+<p>In this lab, we will be writing recursive SQL queries on a database containing
+the adjacency information between the 48 mainland states and Washington DC.</p>
+
+<p>First take a look at <code>states.sql</code> and how the tables in it are
+structured. There are three main tables that you will be querying.</p>
+
+<ul>
+  <li><code>states</code>: US States + DC - HI - AK, represented by their two letter
+  abbreviations.</li>
+  <li><code>adjacencies</code>: All pairs of states that are adjacent to each other</li>
+  <li><code>landlocked</code>: Landlocked (not adjacent to ocean) states</li>
+</ul>
+
+<p>You will write all your solutions in this lab in the starter file
+provided. As with other labs, you can test your solutions with OK. In
+addition, you can use either of the following commands:</p>
+
+<pre><code>$ sqlite3 &lt; lab12.sql
+$ sqlite3 &#x2d;&#x2d;init lab12.sql</code></pre>
+
+<h3 class="question" id="q1">Question 1: What will SQL print?</h3>
+
+<p>First load the relations of state into sqlite3:</p>
+
+<pre><code>$ sqlite3 &#x2d;&#x2d;init lab12.sql</code></pre>
+
+<p>Before we start, inspect the schema of the tables that we've created for you by writing:</p>
+
+<pre><code> sqlite&gt; .schema</code></pre>
+
+<p>This tells you the name of each of our tables and their attributes. For
+each of the below operations on our tables <code>states</code>, <code>adjacencies</code>, and
+<code>landlocked</code> write, in English, what the query is selecting for, then
+run the query yourself:</p>
+
+
+    <pre><code>sqlite&gt; SELECT * FROM states;
+<div class="alt 5">______</div><div class="solution 5">&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x73;&#x20;&#x61;&#x6c;&#x6c;&#x20;&#x72;&#x65;&#x63;&#x6f;&#x72;&#x64;&#x73;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x73;&#x3b;</div>
+sqlite&gt; SELECT state FROM states LIMIT 10;
+<div class="alt 5">______</div><div class="solution 5">&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x73;&#x20;&#x31;&#x30;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x73;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x73;&#x3b;</div>
+sqlite&gt; SELECT s.state, a.s2 FROM states as s, adjacencies as a WHERE s.state = a.s1;
+<div class="alt 5">______</div><div class="solution 5">&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x73;&#x20;&#x65;&#x61;&#x63;&#x68;&#x20;&#x6c;&#x61;&#x6e;&#x64;&#x6c;&#x6f;&#x63;&#x6b;&#x65;&#x64;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x20;&#x70;&#x61;&#x69;&#x72;&#x65;&#x64;&#x20;&#x77;&#x69;&#x74;&#x68;&#x20;&#x65;&#x61;&#x63;&#x68;&#x20;&#x6f;&#x66;&#x20;&#x69;&#x74;&#x73;&#x20;&#x6e;&#x65;&#x69;&#x67;&#x68;&#x62;&#x6f;&#x72;&#x73;&#x2e;</div>
+sqlite&gt; SELECT a1.s1, a2.s2 FROM adjacencies as a1, adjacencies as a2 WHERE a1.s2 = a2.s1; 
+<div class="alt 5">______</div><div class="solution 5">&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x73;&#x20;&#x70;&#x61;&#x69;&#x72;&#x73;&#x20;&#x6f;&#x66;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x7c;&#x73;&#x74;&#x61;&#x74;&#x65;&#x73;&#x20;&#x74;&#x68;&#x61;&#x74;&#x20;&#x61;&#x72;&#x65;&#x20;&#x74;&#x77;&#x6f;&#x20;&#x6e;&#x65;&#x69;&#x67;&#x68;&#x62;&#x6f;&#x72;&#x73;&#x20;&#x61;&#x77;&#x61;&#x79;&#x2e;</div></code></pre>
+
+    <button id='5' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<h3 class="question" id="q2">Question 2: Adjacent</h3>
+
+<p>As a warm-up, write a query that selects all the states adjacent to
+California. You should get the following output:</p>
+
+<pre><code>sqlite&gt; select * from california;
+CA|AZ
+CA|NV
+CA|OR</code></pre>
+
+
+    <button id='0' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>create table california as
+<div class="alt 0">  -- REPLACE THIS LINE
+  select &#x27;YOUR CODE HERE&#x27;;
+</div><div class="solution 0">&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x2a;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x61;&#x64;&#x6a;&#x61;&#x63;&#x65;&#x6e;&#x63;&#x69;&#x65;&#x73;&#x20;&#x77;&#x68;&#x65;&#x72;&#x65;&#x20;&#x73;&#x31;&#x20;&#x3d;&#x20;&#x22;&#x43;&#x41;&#x22;&#x3b;</div></code></pre>
+
+
+
+<p>Use OK to test your solution:</p>
+
+<pre><code>python3 ok &#x2d;q adjacent</code></pre>
+
+<h3 class="question" id="q3">Question 3: Distances</h3>
+
+<p>Create a new table <code>distances</code>, which contains the lengths of all the possible
+paths with less than or equal to 15 border crossings between any two states. For
+example, we can get from California to Texas with 3 crossings by passing through
+Arizona and New Mexico, but we can also get there taking a different path using
+more border crossings. The following query should return the lengths of possible
+paths between CA and WI:</p>
+
+<pre><code>sqlite3&gt; select * from distances where start = &quot;CA&quot; and end = &quot;WI&quot; order by hops;
+CA|WI|6
+CA|WI|7
+CA|WI|8
+CA|WI|9
+CA|WI|10
+CA|WI|11
+CA|WI|12
+CA|WI|13
+CA|WI|14
+CA|WI|15</code></pre>
+
+<p>You will need to write recursive SQL queries to build up this table, starting
+with paths with one border crossing.</p>
+
+
+    <button id='1' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>&#x2d;&#x2d; Finds lengths of possible paths between two states
+create table distances as
+  with
+    distance(start, end, hops) as (
+<div class="alt 1">      -- REPLACE THIS LINE
+      select &#x27;Your&#x27;, &#x27;Code&#x27;, &#x27;Here&#x27;
+</div><div class="solution 1">&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x73;&#x31;&#x2c;&#x20;&#x73;&#x32;&#x2c;&#x20;&#x31;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x61;&#x64;&#x6a;&#x61;&#x63;&#x65;&#x6e;&#x63;&#x69;&#x65;&#x73;&#x20;&#x75;&#x6e;&#x69;&#x6f;&#x6e;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x70;&#x61;&#x74;&#x68;&#x2e;&#x73;&#x74;&#x61;&#x72;&#x74;&#x2c;&#x20;&#x68;&#x6f;&#x70;&#x2e;&#x73;&#x32;&#x2c;&#x20;&#x70;&#x61;&#x74;&#x68;&#x2e;&#x68;&#x6f;&#x70;&#x73;&#x20;&#x2b;&#x20;&#x31;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x64;&#x69;&#x73;&#x74;&#x61;&#x6e;&#x63;&#x65;&#x20;&#x61;&#x73;&#x20;&#x70;&#x61;&#x74;&#x68;&#x2c;&#x20;&#x61;&#x64;&#x6a;&#x61;&#x63;&#x65;&#x6e;&#x63;&#x69;&#x65;&#x73;&#x20;&#x61;&#x73;&#x20;&#x68;&#x6f;&#x70;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x77;&#x68;&#x65;&#x72;&#x65;&#x20;&#x70;&#x61;&#x74;&#x68;&#x2e;&#x65;&#x6e;&#x64;&#x20;&#x3d;&#x20;&#x68;&#x6f;&#x70;&#x2e;&#x73;&#x31;&#x20;&#x61;&#x6e;&#x64;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x70;&#x61;&#x74;&#x68;&#x2e;&#x68;&#x6f;&#x70;&#x73;&#x20;&#x3c;&#x20;&#x31;&#x35;</div>    )
+  select * from distance;</code></pre>
+
+
+
+<p>Use OK to test your solution:</p>
+
+<pre><code>python3 ok &#x2d;q distances</code></pre>
+
+<h3 class="question" id="q4">Question 4: Three-Hop</h3>
+
+<p>Write a query that lists all the states 3 hops from California. Note that
+California itself is such a state. You should get the following output:</p>
+
+<pre><code>sqlite&gt; select * from three_hops;
+AZ
+NV
+OR
+CO
+OK
+TX
+CA
+ID
+UT
+WY
+NM
+MT
+WA</code></pre>
+
+
+    <button id='2' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>create table three_hops as
+<div class="alt 2">  -- REPLACE THIS LINE
+  select &#x27;YOUR CODE HERE&#x27;;
+</div><div class="solution 2">&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x65;&#x6e;&#x64;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x64;&#x69;&#x73;&#x74;&#x61;&#x6e;&#x63;&#x65;&#x73;&#x20;&#x77;&#x68;&#x65;&#x72;&#x65;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x20;&#x3d;&#x20;&#x22;&#x43;&#x41;&#x22;&#x20;&#x61;&#x6e;&#x64;&#x20;&#x68;&#x6f;&#x70;&#x73;&#x20;&#x3d;&#x20;&#x33;&#x3b;</div></code></pre>
+
+
+
+<p>Use OK to test your solution:</p>
+
+<pre><code>python3 ok &#x2d;q three_hops</code></pre>
+
+
+<h2 id="extra-questions">Extra Questions</h2>
+
+
+<p>The following questions are for <strong>extra practice</strong> &mdash; they can be found
+in the <a href="lab12_extra.sql">lab12_extra.sql</a> file. It is recommended that
+you complete these problems as well, but you do not need to turn them
+in for credit.</p>
+
+<h3 class="question" id="q5">Question 5: Alphabetical Path</h3>
+
+<p>An <em>alphabetical path</em> is a path between a sequence of states, visiting each
+state in alphabetical order. Write a query that finds all the alphabetical paths
+with 6 or more hops. Your query should output:</p>
+
+<pre><code>sqlite&gt; select * from alphabetical_paths;
+IA,IL,IN,KY,MO,NE,SD,WY
+IA,IL,IN,KY,MO,TN,VA,WV
+AL,FL,GA,NC,TN,VA,WV
+IA,IL,IN,KY,MO,NE,SD
+IA,IL,IN,KY,MO,NE,WY
+IA,IL,IN,KY,MO,OK,TX
+IA,IL,IN,KY,MO,TN,VA
+IA,IL,IN,KY,OH,PA,WV
+IA,IL,IN,KY,TN,VA,WV
+IA,IL,IN,MI,OH,PA,WV
+IA,IL,KY,MO,NE,SD,WY
+IA,IL,KY,MO,TN,VA,WV
+IL,IN,KY,MO,NE,SD,WY
+IL,IN,KY,MO,TN,VA,WV</code></pre>
+
+<blockquote><p>Remember you can use the <code>||</code> operator in SQL to concatenate two
+strings, and comparison operators such as <code>&lt;</code> or <code>&gt;</code> to find out the
+alphabetical order of two strings.</p></blockquote>
+
+
+    <button id='3' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>create table alphabetical_paths as
+  with
+    paths(s, n, last) as (
+<div class="alt 3">      -- REPLACE THIS LINE
+      select &#x27;Your&#x27;, &#x27;Code&#x27;, &#x27;Here&#x27;
+</div><div class="solution 3">&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x2c;&#x20;&#x31;&#x2c;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x73;&#x20;&#x75;&#x6e;&#x69;&#x6f;&#x6e;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x73;&#x20;&#x7c;&#x7c;&#x20;&#x22;&#x2c;&#x22;&#x20;&#x7c;&#x7c;&#x20;&#x73;&#x32;&#x2c;&#x20;&#x6e;&#x2b;&#x31;&#x2c;&#x20;&#x73;&#x32;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x70;&#x61;&#x74;&#x68;&#x73;&#x2c;&#x20;&#x61;&#x64;&#x6a;&#x61;&#x63;&#x65;&#x6e;&#x63;&#x69;&#x65;&#x73;&#x20;&#x77;&#x68;&#x65;&#x72;&#x65;&#x20;&#x73;&#x31;&#x3d;&#x6c;&#x61;&#x73;&#x74;&#x20;&#x61;&#x6e;&#x64;&#x20;&#x73;&#x31;&#x20;&#x3c;&#x20;&#x73;&#x32;</div>    )
+  select s from paths where n &gt; 6 order by &#x2d;n;</code></pre>
+
+
+
+<p>Use OK to test your solution:</p>
+
+<pre><code>python3 ok &#x2d;q paths</code></pre>
+
+<h3 class="question" id="q6">Question 6: Inland Distances</h3>
+
+<p>Create a table <code>inland_distances</code>, which contains the lengths of possible paths
+with less than 10 border crossings between two states that enter only landlocked
+states along the way. We can then find the lengths of inland paths between CA
+and WA:</p>
+
+<pre><code>&#x2d;&#x2d; Lengths of inland paths between CA and WA:
+sqlite3&gt; select * from inland_distances where start = &quot;CA&quot; and end = &quot;WA&quot; order by hops;
+CA|WA|3
+CA|WA|4
+CA|WA|5
+CA|WA|6
+CA|WA|7
+CA|WA|8
+CA|WA|9
+CA|WA|10</code></pre>
+
+<p>We can also find the states that are 2 inland hops from CA:</p>
+
+<pre><code>&#x2d;&#x2d; States 2 inland hops from CA:
+sqlite3&gt; select end from inland_distances where start = &quot;CA&quot; and hops = 2;
+AZ
+CA
+ID
+NM
+NV
+OR
+UT</code></pre>
+
+
+    <button id='4' class='toggleButton'>
+    Toggle Solution<noscript> (enable JavaScript)</noscript>
+    </button>
+    
+
+<pre><code>&#x2d;&#x2d; Lengths of possible paths between two states that enter only
+&#x2d;&#x2d; landlocked states along the way.
+create table inland_distances as
+  with
+    inland(start, end, hops) as (
+<div class="alt 4">      -- REPLACE THIS LINE
+      select &#x27;Your&#x27;, &#x27;Code&#x27;, &#x27;Here&#x27;
+</div><div class="solution 4">&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x2c;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x2c;&#x20;&#x30;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x6c;&#x61;&#x6e;&#x64;&#x6c;&#x6f;&#x63;&#x6b;&#x65;&#x64;&#x20;&#x75;&#x6e;&#x69;&#x6f;&#x6e;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x2c;&#x20;&#x73;&#x32;&#x2c;&#x20;&#x68;&#x6f;&#x70;&#x73;&#x20;&#x2b;&#x20;&#x31;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x69;&#x6e;&#x6c;&#x61;&#x6e;&#x64;&#x2c;&#x20;&#x61;&#x64;&#x6a;&#x61;&#x63;&#x65;&#x6e;&#x63;&#x69;&#x65;&#x73;&#x2c;&#x20;&#x6c;&#x61;&#x6e;&#x64;&#x6c;&#x6f;&#x63;&#x6b;&#x65;&#x64;&#xa;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x77;&#x68;&#x65;&#x72;&#x65;&#x20;&#x65;&#x6e;&#x64;&#x20;&#x3d;&#x20;&#x73;&#x31;&#x20;&#x61;&#x6e;&#x64;&#x20;&#x73;&#x32;&#x20;&#x3d;&#x20;&#x73;&#x74;&#x61;&#x74;&#x65;&#x20;&#x61;&#x6e;&#x64;&#x20;&#x68;&#x6f;&#x70;&#x73;&#x20;&#x3c;&#x20;&#x38;</div>    )
+<div class="alt 4">  -- REPLACE THIS LINE
+  select &#x27;Your&#x27; as start, &#x27;Code&#x27; as end, &#x27;Here&#x27; as hops;
+</div><div class="solution 4">&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x73;&#x31;&#x20;&#x61;&#x73;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x2c;&#x20;&#x73;&#x32;&#x20;&#x61;&#x73;&#x20;&#x65;&#x6e;&#x64;&#x2c;&#x20;&#x32;&#x20;&#x61;&#x73;&#x20;&#x68;&#x6f;&#x70;&#x73;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x61;&#x64;&#x6a;&#x61;&#x63;&#x65;&#x6e;&#x63;&#x69;&#x65;&#x73;&#x20;&#x75;&#x6e;&#x69;&#x6f;&#x6e;&#xa;&#x20;&#x20;&#x73;&#x65;&#x6c;&#x65;&#x63;&#x74;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x2e;&#x73;&#x31;&#x20;&#x61;&#x73;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x2c;&#x20;&#x65;&#x6e;&#x64;&#x2e;&#x73;&#x32;&#x20;&#x61;&#x73;&#x20;&#x65;&#x6e;&#x64;&#x2c;&#x20;&#x68;&#x6f;&#x70;&#x73;&#x2b;&#x32;&#x20;&#x61;&#x73;&#x20;&#x68;&#x6f;&#x70;&#x73;&#xa;&#x20;&#x20;&#x20;&#x20;&#x66;&#x72;&#x6f;&#x6d;&#x20;&#x61;&#x64;&#x6a;&#x61;&#x63;&#x65;&#x6e;&#x63;&#x69;&#x65;&#x73;&#x20;&#x61;&#x73;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x2c;&#x20;&#x61;&#x64;&#x6a;&#x61;&#x63;&#x65;&#x6e;&#x63;&#x69;&#x65;&#x73;&#x20;&#x61;&#x73;&#x20;&#x65;&#x6e;&#x64;&#x2c;&#x20;&#x69;&#x6e;&#x6c;&#x61;&#x6e;&#x64;&#xa;&#x20;&#x20;&#x20;&#x20;&#x77;&#x68;&#x65;&#x72;&#x65;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x2e;&#x73;&#x32;&#x20;&#x3d;&#x20;&#x73;&#x74;&#x61;&#x72;&#x74;&#x20;&#x61;&#x6e;&#x64;&#x20;&#x65;&#x6e;&#x64;&#x2e;&#x73;&#x31;&#x20;&#x3d;&#x20;&#x65;&#x6e;&#x64;&#x3b;</div></code></pre>
+
+
+
+<p>Use OK to test your solution:</p>
+
+<pre><code>python3 ok &#x2d;q inland</code></pre>
+
+  </body>
+
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+  $(function() {
+    if (new Date("4/23/2015") < new Date()) {
+      $('.toggleButton').css('display', 'inline-block');
+      $('.toggleButton').click(function() {
+        var solution_id = $(this).attr('id');
+        $('div.' + solution_id).slideToggle(600);
+      });
+    }
+    // Always display these toggle buttons
+    $('.toggleButtonShow').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+  });
+</script>
+</html>
